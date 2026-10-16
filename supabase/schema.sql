@@ -13,14 +13,14 @@ create table if not exists public.profiles (
 
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer set search_path = public
-as $
+as $$
 begin
   insert into public.profiles(id,email,role,display_name)
   values(new.id,new.email,case when new.raw_user_meta_data->>'role' = 'parent' then 'parent' else 'student' end,coalesce(new.raw_user_meta_data->>'display_name',split_part(new.email,'@',1)))
   on conflict (id) do nothing;
   return new;
 end;
-$;
+$$;
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created after insert on auth.users
 for each row execute function public.handle_new_user();
@@ -36,7 +36,7 @@ alter table public.learning_data enable row level security;
 
 create or replace function public.is_linked_student(p_student_id uuid)
 returns boolean language sql stable security definer set search_path = public
-as $ select exists(select 1 from public.profiles p where p.id = auth.uid() and p.role = 'parent' and p.linked_student_id = p_student_id) $;
+as $$ select exists(select 1 from public.profiles p where p.id = auth.uid() and p.role = 'parent' and p.linked_student_id = p_student_id) $;
 
 drop policy if exists "profile read self or linked student" on public.profiles;
 create policy "profile read self or linked student" on public.profiles for select to authenticated
@@ -64,21 +64,21 @@ using (student_id = auth.uid()) with check (student_id = auth.uid());
 
 create or replace function public.protect_profile_role_and_link()
 returns trigger language plpgsql security definer set search_path = public
-as $
+as $$
 begin
   if new.role is distinct from old.role then
     raise exception '계정 유형은 변경할 수 없습니다.';
   end if;
   return new;
 end;
-$;
+$$;
 drop trigger if exists protect_profile_role_and_link on public.profiles;
 create trigger protect_profile_role_and_link before update on public.profiles
 for each row execute function public.protect_profile_role_and_link();
 
 create or replace function public.rotate_student_link_code()
 returns text language plpgsql security definer set search_path = public
-as $$
+as $$$
 declare new_code text;
 begin
   if not exists(select 1 from public.profiles where id = auth.uid() and role = 'student') then
@@ -92,7 +92,7 @@ $$;
 
 create or replace function public.link_student_by_code(p_code text)
 returns uuid language plpgsql security definer set search_path = public
-as $$
+as $$$
 declare sid uuid;
 begin
   if not exists(select 1 from public.profiles where id = auth.uid() and role = 'parent') then
