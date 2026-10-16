@@ -29,7 +29,7 @@ main{max-width:1000px;margin:20px auto;padding:0 14px 40px}.tabs{display:flex;ga
 <div class="row" style="margin-top:12px"><button class="btn" id="accountSignUp">회원가입</button><button class="btn secondary" id="accountSignIn">로그인</button><button class="btn secondary" id="accountSignOut">로그아웃</button></div>
 <div id="parentLinkBox" class="hidden"><label class="label">학생 연결 코드</label><input id="studentLinkCode" placeholder="학생이 발급한 연결 코드"><button class="btn secondary" id="linkStudent" style="margin-top:8px">학생 계정 연결</button></div>
 <div id="accountStatus" class="notice">클라우드 설정이 완료되면 로그인 기능이 활성화됩니다.</div>
-<div id="studentCodeBox" class="hidden"><p class="muted">보호자에게 아래 코드를 알려주면 연결할 수 있습니다.</p><strong id="studentCode"></strong><button class="btn secondary" id="refreshStudentCode">연결 코드 새로 만들기</button></div>
+<div id="studentCodeBox" class="hidden"><p class="muted">보호자에게 아래 코드를 알려주면 연결할 수 있습니다.</p><strong id="studentCode"></strong><button class="btn secondary" id="copyStudentCode" type="button">코드 복사</button><button class="btn secondary" id="refreshStudentCode">연결 코드 새로 만들기</button></div>
 </section>
 <div class="grid">
 <div class="card">
@@ -323,6 +323,7 @@ $("accountSignUp").onclick=()=>MEC_CLOUD.signup().catch(e=>MEC_CLOUD.status(e.me
 $("accountSignIn").onclick=()=>MEC_CLOUD.signin().catch(e=>MEC_CLOUD.status(e.message));
 $("accountSignOut").onclick=async()=>{if(MEC_CLOUD.client)await MEC_CLOUD.client.auth.signOut();MEC_CLOUD.user=null;MEC_CLOUD.profile=null;MEC_CLOUD.status("로그아웃했습니다. 로컬 기록은 삭제하지 않았습니다.");};
 $("linkStudent").onclick=()=>MEC_CLOUD.linkStudent().catch(e=>MEC_CLOUD.status(e.message));
+$("copyStudentCode").onclick=async()=>{const code=$("studentCode").textContent.trim();if(!code||code==="연결 코드 생성 중"){MEC_CLOUD.status("복사할 연결 코드가 없습니다. 먼저 코드를 생성해 주세요.");return;}try{await navigator.clipboard.writeText(code);MEC_CLOUD.status("연결 코드를 복사했습니다. 보호자에게 붙여넣기 하세요.");}catch(e){const ta=document.createElement("textarea");ta.value=code;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();const ok=document.execCommand("copy");ta.remove();MEC_CLOUD.status(ok?"연결 코드를 복사했습니다. 보호자에게 붙여넣기 하세요.":"자동 복사에 실패했습니다. 연결 코드를 길게 눌러 복사해 주세요.");}};
 $("refreshStudentCode").onclick=()=>MEC_CLOUD.newCode().catch(e=>MEC_CLOUD.status(e.message));
 MEC_CLOUD.init();
 
