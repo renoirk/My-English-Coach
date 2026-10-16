@@ -20,9 +20,13 @@ create table if not exists public.learning_data (
 alter table public.profiles enable row level security;
 alter table public.learning_data enable row level security;
 
+create or replace function public.is_linked_student(p_student_id uuid)
+returns boolean language sql stable security definer set search_path = public
+as $ select exists(select 1 from public.profiles p where p.id = auth.uid() and p.role = 'parent' and p.linked_student_id = p_student_id) $;
+
 drop policy if exists "profile read self or linked student" on public.profiles;
 create policy "profile read self or linked student" on public.profiles for select to authenticated
-using (id = auth.uid() or id in (select p.linked_student_id from public.profiles p where p.id = auth.uid() and p.role = 'parent' and p.linked_student_id is not null));
+using (id = auth.uid() or public.is_linked_student(id));
 
 drop policy if exists "profile insert self" on public.profiles;
 create policy "profile insert self" on public.profiles for insert to authenticated
@@ -34,7 +38,7 @@ using (id = auth.uid()) with check (id = auth.uid() and role in ('student','pare
 
 drop policy if exists "learning data read student or linked parent" on public.learning_data;
 create policy "learning data read student or linked parent" on public.learning_data for select to authenticated
-using (student_id = auth.uid() or exists(select 1 from public.profiles p where p.id = auth.uid() and p.role = 'parent' and p.linked_student_id = learning_data.student_id));
+using (student_id = auth.uid() or public.is_linked_student(student_id));
 
 drop policy if exists "student inserts own learning data" on public.learning_data;
 create policy "student inserts own learning data" on public.learning_data for insert to authenticated
@@ -43,6 +47,20 @@ with check (student_id = auth.uid());
 drop policy if exists "student updates own learning data" on public.learning_data;
 create policy "student updates own learning data" on public.learning_data for update to authenticated
 using (student_id = auth.uid()) with check (student_id = auth.uid());
+
+create or replace function public.protect_profile_role_and_link()
+returns trigger language plpgsql security definer set search_path = public
+as $
+begin
+  if current_user <> 'postgres' and (new.role is distinct from old.role or new.linked_student_id is distinct from old.linked_student_id) then
+    raise exception '계정 유형과 학생 연결은 전용 기능으로만 변경할 수 있습니다.';
+  end if;
+  return new;
+end;
+$;
+drop trigger if exists protect_profile_role_and_link on public.profiles;
+create trigger protect_profile_role_and_link before update on public.profiles
+for each row execute function public.protect_profile_role_and_link();
 
 create or replace function public.rotate_student_link_code()
 returns text language plpgsql security definer set search_path = public
