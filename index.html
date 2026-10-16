@@ -40,7 +40,15 @@ main{max-width:1000px;margin:20px auto;padding:0 14px 40px}.tabs{display:flex;ga
 <label class="label">가장 중요한 목표</label><select id="goal"><option value="exam">학교 내신 성적 향상</option><option value="basics">영어 기초 다지기</option><option value="reading">독해 실력 향상</option></select>
 <label class="label">좋아하는 주제</label><select id="interest"><option value="soccer">축구·스포츠</option><option value="games">게임</option><option value="friends">친구·학교생활</option></select>
 <button class="btn" id="saveProfile" style="width:100%;margin-top:15px">설정 저장 및 학습 계획 만들기</button>
-<label style="display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px;font-weight:700;color:var(--muted)"><input id="skipDiagnosis" type="checkbox" style="width:auto;margin:0"> 이번에는 실력 진단 건너뛰기 (기본 난이도로 시작)</label>
+<div id="diagnosisChoice" class="card hidden" style="margin-top:14px;background:#f8fbff;border-color:#cbdcf2">
+<h3>설정 저장 완료</h3>
+<p class="muted">이번 설정에 적용할 학습 기준을 선택해 주세요.</p>
+<div class="row">
+<button class="btn" id="chooseNewDiagnosis">새로 실력 진단하기</button>
+<button class="btn secondary" id="chooseExistingDiagnosis">기존 진단 결과 사용하기</button>
+</div>
+<p id="diagnosisChoiceHelp" class="notice">새 진단은 현재 영어 실력을 다시 확인합니다. 기존 결과 사용은 이전 진단 점수와 취약 영역을 유지합니다.</p>
+</div>
 </div>
 <div class="card">
 <h2>나의 학습 현황</h2><div class="row"><div class="stat"><span class="muted">진단 점수</span><strong id="scoreStat">미진단</strong></div><div class="stat"><span class="muted">완료한 날</span><strong id="daysStat">0일</strong></div><div class="stat"><span class="muted">학습 진행</span><strong id="progressStat">0%</strong></div></div>
@@ -167,7 +175,9 @@ function persist(){localStorage.setItem("mec_personal_v2",JSON.stringify(S));if(
 function load(){try{let x=JSON.parse(localStorage.getItem("mec_personal_v2")||"null");if(x)S={weeklyTests:[],monthlyTests:[],...S,...x}}catch(e){}if(S.profile){$("name").value=S.profile.name||"";$("grade").value=S.profile.grade||"중학교 3학년";$("score").value=S.profile.score||"30-59";$("weeks").value=S.profile.weeks||12;$("minutes").value=S.profile.minutes||30;$("goal").value=S.profile.goal||"exam";$("interest").value=S.profile.interest||"soccer"}renderAll()}
 function go(id){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("hidden",x.id!==id));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page===id));if(id==="today")renderLesson();if(id==="report")renderReport();if(id==="tests")renderAssessmentHistory6();window.scrollTo({top:0,behavior:"smooth"})}
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>go(b.dataset.page));
-$("saveProfile").onclick=()=>{S.profile={name:$("name").value.trim()||"학습자",grade:$("grade").value,score:$("score").value,weeks:+$("weeks").value,minutes:+$("minutes").value,goal:$("goal").value,interest:$("interest").value};if($("skipDiagnosis").checked){const weak=S.profile.goal==="reading"?"독해 보강":S.profile.goal==="basics"?"기초 보강":"문법 보강";S.diagnosis={skipped:true,score:0,total:0,weak,areas:{},date:new Date().toISOString()};persist();go("today")}else{persist();go("diagnosis")}};
+$("saveProfile").onclick=()=>{S.profile={name:$("name").value.trim()||"학습자",grade:$("grade").value,score:$("score").value,weeks:+$("weeks").value,minutes:+$("minutes").value,goal:$("goal").value,interest:$("interest").value};persist();const hasPrevious=!!S.diagnosis;$("diagnosisChoice").classList.remove("hidden");$("chooseExistingDiagnosis").disabled=!hasPrevious;$("diagnosisChoiceHelp").textContent=hasPrevious?"새 진단은 현재 영어 실력을 다시 확인합니다. 기존 결과 사용은 이전 진단 점수와 취약 영역을 유지합니다.":"아직 저장된 실력 진단 결과가 없습니다. 처음에는 새 실력 진단을 진행해 주세요.";$("diagnosisChoice").scrollIntoView({behavior:"smooth",block:"nearest"})};
+$("chooseNewDiagnosis").onclick=()=>{ $("diagnosisChoice").classList.add("hidden");go("diagnosis")};
+$("chooseExistingDiagnosis").onclick=()=>{if(!S.diagnosis)return;persist();$("diagnosisChoice").classList.add("hidden");go("today")};
 $("startDiagHome").onclick=()=>go("diagnosis");$("goTodayHome").onclick=()=>go("today");$("toDiag").onclick=()=>go("diagnosis");
 let qi=0,ans=[],pick=null;
 $("beginDiag").onclick=()=>{qi=0;ans=[];pick=null;$("diagStart").classList.add("hidden");$("diagResult").classList.add("hidden");$("diagQ").classList.remove("hidden");showDiag()};
