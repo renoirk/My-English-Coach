@@ -260,7 +260,7 @@ async signup(){
  const email=$("accountEmail").value.trim(),password=$("accountPassword").value,role=$("accountRole").value;
  if(!email||password.length<8)throw new Error("이메일과 8자 이상의 비밀번호를 입력해 주세요.");
  const {data,error}=await this.client.auth.signUp({email,password,options:{data:{role}}});if(error)throw error;
- if(data.user){const {error:e}=await this.client.from("profiles").upsert({id:data.user.id,email,role,display_name:$("name").value.trim()||email.split("@")[0]});if(e)throw e;}
+ 
  this.status("가입 요청을 처리했습니다. 이메일 확인이 필요하면 메일 인증 후 로그인해 주세요.");
  if(data.session)await this.onLogin(data.user);
  },
