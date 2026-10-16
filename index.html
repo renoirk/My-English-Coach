@@ -300,6 +300,9 @@ async onLogin(user){
  this.user=user;const {data:profile,error:pe}=await this.client.from("profiles").select("*").eq("id",user.id).maybeSingle();if(pe)throw pe;
  if(!profile){this.status("계정 프로필이 없습니다. 회원가입을 다시 진행하거나 관리자 설정을 확인해 주세요.");return;}
  this.profile=profile;
+ const isParent=profile.role==="parent";
+ ["name","grade","score"].forEach(id=>$(id).disabled=isParent);
+ ["weeks","minutes","goal","interest"].forEach(id=>$(id).disabled=false);
  $("accountRole").value=profile.role;
  $("parentLinkBox").classList.toggle("hidden",profile.role!=="parent");
  $("studentCodeBox").classList.toggle("hidden",profile.role!=="student");
