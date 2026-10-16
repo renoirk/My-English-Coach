@@ -293,7 +293,7 @@ async save(state){
 async linkStudent(){
  const code=$("studentLinkCode").value.trim();if(!code)throw new Error("학생 연결 코드를 입력해 주세요.");
  const {data,error}=await this.client.rpc("link_student_by_code",{p_code:code});if(error)throw error;
- this.profile.linked_student_id=data;this.status("학생 계정 연결을 요청했습니다. 학생 기록 접근 권한을 확인하세요.");
+ this.profile.linked_student_id=data;await this.onLogin(this.user);this.status("학생 계정 연결 완료 · 학습 기록을 불러왔습니다.");
  },
 async newCode(){
  const {data,error}=await this.client.rpc("rotate_student_link_code");if(error)throw error;
