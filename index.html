@@ -19,7 +19,7 @@ main{max-width:1000px;margin:20px auto;padding:0 14px 40px}.tabs{display:flex;ga
 <header><div class="brand">PERSONALIZED ENGLISH LEARNING</div><div class="hero">My English Coach</div><div class="sub">나의 수준에 맞게 공부하고, 매주 성장 확인하기</div></header>
 <main>
 <nav class="tabs">
-<button class="tab active" data-page="home">내 학습실</button><button class="tab" data-page="diagnosis">실력 진단</button><button class="tab" data-page="today">오늘의 공부</button><button class="tab" data-page="report">학습 리포트</button>
+<button class="tab active" data-page="home">내 학습실</button><button class="tab" data-page="diagnosis">실력 진단</button><button class="tab" data-page="today">오늘의 공부</button><button class="tab" data-page="report">학습 리포트</button><button class="tab" data-page="coach">AI 학습 코치</button>
 </nav>
 <section id="home" class="page">
 <div class="grid">
@@ -46,6 +46,29 @@ main{max-width:1000px;margin:20px auto;padding:0 14px 40px}.tabs{display:flex;ga
 </div></section>
 <section id="today" class="page hidden"><div class="card"><div class="row"><div><h2>오늘의 공부</h2><p class="muted" id="todayMeta">진단평가 후 맞춤 학습이 열립니다.</p></div><span class="pill" id="timePill">30분</span></div><div id="lessonBody"><p>학생 설정을 저장하고 진단평가를 완료해 주세요.</p><button class="btn secondary" id="toDiag">실력 진단으로 이동</button></div></div></section>
 <section id="report" class="page hidden"><div class="card"><h2>학습 리포트</h2><p class="muted">이 브라우저에 저장된 개인 학습 기록입니다.</p><div id="reportBody">아직 기록이 없습니다.</div><div class="row"><button class="btn secondary" id="exportData">학습 기록 내보내기</button><button class="btn secondary" id="resetData">기록 초기화</button></div><p class="notice">기록은 현재 기기의 브라우저에 저장됩니다. 다른 기기와 자동 동기화되지 않습니다.</p></div></section>
+
+<section id="coach" class="page hidden">
+  <div class="card">
+    <h2>AI 학습 코치</h2>
+    <p class="muted">모르는 문법, 틀린 문제, 영어 문장을 질문해 보세요. 쉬운 설명과 힌트부터 제공합니다.</p>
+    <div class="row" style="margin:12px 0">
+      <button class="btn secondary coach-prompt" data-prompt="현재시제와 현재진행형의 차이를 중3 수준으로 쉽게 설명해 줘.">문법 설명</button>
+      <button class="btn secondary coach-prompt" data-prompt="영어 문제를 틀렸을 때 어떻게 오답을 분석하면 되는지 예시로 보여 줘.">오답 분석</button>
+      <button class="btn secondary coach-prompt" data-prompt="축구와 게임을 주제로 쉬운 영어 문장 3개를 만들고 한 문장씩 연습시켜 줘.">영어 연습</button>
+    </div>
+    <div id="coachChat" class="reading" style="min-height:180px;max-height:460px;overflow:auto">
+      <div class="task"><b>AI 코치</b><p>안녕! 나는 너의 영어 코치야. 모르는 문제를 적거나 위의 버튼을 눌러 시작해 봐. 정답을 바로 알려주기보다 먼저 힌트를 줄게.</p></div>
+    </div>
+    <label class="label" for="coachInput">질문 또는 틀린 문제</label>
+    <textarea id="coachInput" rows="3" placeholder="예: She don't likes soccer. 어디가 틀렸어?"></textarea>
+    <div class="row" style="margin-top:10px">
+      <button class="btn" id="sendCoach">코치에게 질문하기</button>
+      <button class="btn secondary" id="clearCoach">대화 지우기</button>
+    </div>
+    <p class="notice" id="coachStatus">AI 응답을 사용하려면 Vercel에 OPENAI_API_KEY 환경변수를 설정해야 합니다. 키는 브라우저에 공개되지 않도록 서버에서만 사용합니다.</p>
+  </div>
+</section>
+
 <div class="footer">My English Coach · 조카 개인용 MVP · 브라우저 로컬 저장 방식</div>
 </main>
 <script>
@@ -133,6 +156,47 @@ function renderAll(){let d=S.diagnosis; $("scoreStat").textContent=d?`${d.score}
 function renderReport(){let d=S.diagnosis;if(!d){$("reportBody").innerHTML="<p>진단평가를 완료하면 영역별 결과가 표시됩니다.</p>";return}let rows=Object.entries(d.areas).map(([k,v])=>`<div class="task"><b>${k}</b><div class="progress"><span style="width:${Math.round(v.c/v.n*100)}%"></span></div><span class="muted">${v.c}/${v.n} 정답 (${Math.round(v.c/v.n*100)}%)</span></div>`).join("");$("reportBody").innerHTML=`<div class="row"><div class="stat"><span class="muted">진단 점수</span><strong>${d.score}/${d.total}</strong></div><div class="stat"><span class="muted">완료한 학습</span><strong>${S.completed.length}일</strong></div><div class="stat"><span class="muted">학습 기간</span><strong>${S.profile?.weeks||12}주</strong></div></div><h3 style="margin-top:18px">영역별 진단</h3>${rows}<h3>추천 학습 영역</h3><p>${d.weak}</p><h3>완료 기록</h3><p>${S.history.length?S.history.map(h=>`${h.date} · ${h.topic} · ${h.correct}/${h.total}`).join("<br>"):"아직 완료한 학습이 없습니다."}</p>`}
 $("exportData").onclick=()=>{let blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="my-english-coach-record.json";a.click();URL.revokeObjectURL(a.href)};
 $("resetData").onclick=()=>{if(confirm("이 브라우저의 프로필과 학습 기록을 모두 삭제할까요?")){localStorage.removeItem("mec_personal_v2");S={profile:null,diagnosis:null,history:[],completed:[],lessonState:null};load()}};
+
+let coachMessages=[];
+function appendCoach(role,text){
+  const wrap=document.createElement("div");wrap.className="task";
+  const b=document.createElement("b");b.textContent=role==="assistant"?"AI 코치":"나";
+  const p=document.createElement("p");p.style.whiteSpace="pre-wrap";p.textContent=text;
+  wrap.append(b,p);$("coachChat").appendChild(wrap);$("coachChat").scrollTop=$("coachChat").scrollHeight;
+}
+async function askCoach(prefill){
+  const input=$("coachInput"), question=(prefill||input.value).trim();
+  if(!question)return;
+  input.value="";appendCoach("user",question);
+  coachMessages.push({role:"user",content:question});
+  $("sendCoach").disabled=true;$("coachStatus").textContent="질문을 분석하고 있어요...";
+  try{
+    const payload={
+      message:question,
+      history:coachMessages.slice(-10),
+      student:{
+        grade:S.profile?.grade||"중학교 3학년",
+        goal:S.profile?.goal==="exam"?"학교 내신 성적 향상":S.profile?.goal==="reading"?"독해 향상":"영어 기초 다지기",
+        interest:S.profile?.interest==="games"?"게임":S.profile?.interest==="friends"?"친구·학교생활":"축구·스포츠",
+        diagnosis:S.diagnosis?{score:S.diagnosis.score,total:S.diagnosis.total,weak:S.diagnosis.weak,areas:S.diagnosis.areas}:null
+      }
+    };
+    const res=await fetch("/api/coach",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+    const data=await res.json().catch(()=>({}));
+    if(!res.ok)throw new Error(data.error||"AI 코치 연결에 실패했어요.");
+    const answer=data.answer||"답변을 받지 못했어요. 다시 질문해 주세요.";
+    appendCoach("assistant",answer);coachMessages.push({role:"assistant",content:answer});
+    $("coachStatus").textContent="설명이 어려우면 더 쉽게 설명해 달라고 요청해도 좋아요.";
+  }catch(e){
+    appendCoach("assistant","아직 AI 코치 서버가 준비되지 않았거나 연결에 문제가 있어요. Vercel의 Environment Variables에 OPENAI_API_KEY가 설정되어 있는지 확인해 주세요. ("+e.message+")");
+    $("coachStatus").textContent="연결 확인이 필요합니다.";
+  }finally{$("sendCoach").disabled=false;}
+}
+$("sendCoach").onclick=()=>askCoach();
+$("coachInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();askCoach();}});
+$("clearCoach").onclick=()=>{coachMessages=[];$("coachChat").innerHTML='<div class="task"><b>AI 코치</b><p>대화를 새로 시작해요. 어떤 점이 궁금한가요?</p></div>';};
+document.querySelectorAll(".coach-prompt").forEach(b=>b.onclick=()=>askCoach(b.dataset.prompt));
+
 load();
 </script>
 </body></html>
