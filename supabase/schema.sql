@@ -66,8 +66,8 @@ create or replace function public.protect_profile_role_and_link()
 returns trigger language plpgsql security definer set search_path = public
 as $
 begin
-  if current_user <> 'postgres' and (new.role is distinct from old.role or new.linked_student_id is distinct from old.linked_student_id) then
-    raise exception '계정 유형과 학생 연결은 전용 기능으로만 변경할 수 있습니다.';
+  if new.role is distinct from old.role then
+    raise exception '계정 유형은 변경할 수 없습니다.';
   end if;
   return new;
 end;
