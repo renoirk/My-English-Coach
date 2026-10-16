@@ -78,7 +78,7 @@ for each row execute function public.protect_profile_role_and_link();
 
 create or replace function public.rotate_student_link_code()
 returns text language plpgsql security definer set search_path = public
-as $$$
+as $
 declare new_code text;
 begin
   if not exists(select 1 from public.profiles where id = auth.uid() and role = 'student') then
@@ -92,7 +92,7 @@ $$;
 
 create or replace function public.link_student_by_code(p_code text)
 returns uuid language plpgsql security definer set search_path = public
-as $$$
+as $
 declare sid uuid;
 begin
   if not exists(select 1 from public.profiles where id = auth.uid() and role = 'parent') then
