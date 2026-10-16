@@ -315,8 +315,14 @@ async onLogin(user){
 async save(state){
  if(!this.client||!this.user)return;
  clearTimeout(this.saveTimer);this.saveTimer=setTimeout(async()=>{try{
- const target=this.profile?.role==="parent"?this.profile.linked_student_id:this.user.id;
- if(!target)return;
+ if(this.profile?.role==="parent"){
+  if(!this.profile.linked_student_id)return;
+  const p=state.profile||{};
+  const {error}=await this.client.rpc("parent_update_student_plan",{p_weeks:Number(p.weeks||12),p_minutes:Number(p.minutes||30),p_goal:String(p.goal||"exam"),p_interest:String(p.interest||"soccer")});
+  if(error)throw error;
+  this.status("보호자 권한으로 학습 목표·계획을 클라우드에 저장했습니다.");return;
+ }
+ const target=this.user.id;
  const {error}=await this.client.from("learning_data").upsert({student_id:target,state:state,updated_at:new Date().toISOString()},{onConflict:"student_id"});
  if(error)this.status("클라우드 저장 실패: "+error.message);else this.status("클라우드에 저장되었습니다.");
  }catch(e){this.status("클라우드 저장 오류: "+e.message);}},700);
