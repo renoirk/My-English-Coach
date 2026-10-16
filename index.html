@@ -19,7 +19,7 @@ main{max-width:1000px;margin:20px auto;padding:0 14px 40px}.tabs{display:flex;ga
 <header><div class="brand">PERSONALIZED ENGLISH LEARNING</div><div class="hero">My English Coach</div><div class="sub">나의 수준에 맞게 공부하고, 매주 성장 확인하기</div></header>
 <main>
 <nav class="tabs">
-<button class="tab active" data-page="home">내 학습실</button><button class="tab" data-page="diagnosis">실력 진단</button><button class="tab" data-page="today">오늘의 공부</button><button class="tab" data-page="report">학습 리포트</button><button class="tab" data-page="coach">AI 학습 코치</button>
+<button class="tab active" data-page="home">내 학습실</button><button class="tab" data-page="diagnosis">실력 진단</button><button class="tab" data-page="today">오늘의 공부</button><button class="tab" data-page="report">학습 리포트</button><button class="tab" data-page="coach">AI 학습 코치</button><button class="tab" data-page="tests">주간·월별 평가</button>
 </nav>
 <section id="home" class="page">
 <div class="grid">
@@ -69,7 +69,7 @@ main{max-width:1000px;margin:20px auto;padding:0 14px 40px}.tabs{display:flex;ga
   </div>
 </section>
 
-<div class="footer">My English Coach · 조카 개인용 MVP · 브라우저 로컬 저장 방식</div>
+<section id="tests" class="page hidden"><div class="card"><h2>주간 테스트</h2><p class="muted">매주 어휘·문법·독해를 확인합니다.</p><div class="row"><div class="stat"><span class="muted">이번 주</span><strong id="weeklyStatus">미응시</strong></div><div class="stat"><span class="muted">최근 점수</span><strong id="weeklyScore">-</strong></div></div><p id="weeklyInfo" class="muted">5문항</p><button class="btn" id="startWeekly">주간 테스트 시작</button><div id="weeklyTestArea" class="hidden"></div><div id="weeklyHistory"></div></div><div class="card"><h2>월별 진단</h2><p class="muted">매월 어휘·문법·독해를 다시 점검합니다.</p><div class="row"><div class="stat"><span class="muted">이번 달</span><strong id="monthlyStatus">미응시</strong></div><div class="stat"><span class="muted">최근 점수</span><strong id="monthlyScore">-</strong></div></div><p id="monthlyInfo" class="muted">8문항</p><button class="btn" id="startMonthly">월별 진단 시작</button><div id="monthlyTestArea" class="hidden"></div><div id="monthlyHistory"></div></div></section><div class="footer">My English Coach · 조카 개인용 MVP · 브라우저 로컬 저장 방식</div>
 </main>
 <script>
 const $=id=>document.getElementById(id);
@@ -136,9 +136,9 @@ function makeAdaptiveLesson(d, sessionIndex){
   return {...base,title:base.title+" · "+level+" 단계",rule:base.rule+" 오늘 문제는 진단 점수에 맞춘 "+level+" 단계입니다.",qs:arr};
 }
 
-let S={profile:null,diagnosis:null,history:[],completed:[],lessonState:null};
+let S={profile:null,diagnosis:null,history:[],completed:[],lessonState:null,weeklyTests:[],monthlyTests:[]};
 function persist(){localStorage.setItem("mec_personal_v2",JSON.stringify(S));renderAll()}
-function load(){try{let x=JSON.parse(localStorage.getItem("mec_personal_v2")||"null");if(x)S={...S,...x}}catch(e){}if(S.profile){$("name").value=S.profile.name||"";$("grade").value=S.profile.grade||"중학교 3학년";$("score").value=S.profile.score||"30-59";$("weeks").value=S.profile.weeks||12;$("minutes").value=S.profile.minutes||30;$("goal").value=S.profile.goal||"exam";$("interest").value=S.profile.interest||"soccer"}renderAll()}
+function load(){try{let x=JSON.parse(localStorage.getItem("mec_personal_v2")||"null");if(x)S={weeklyTests:[],monthlyTests:[],...S,...x}}catch(e){}if(S.profile){$("name").value=S.profile.name||"";$("grade").value=S.profile.grade||"중학교 3학년";$("score").value=S.profile.score||"30-59";$("weeks").value=S.profile.weeks||12;$("minutes").value=S.profile.minutes||30;$("goal").value=S.profile.goal||"exam";$("interest").value=S.profile.interest||"soccer"}renderAll()}
 function go(id){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("hidden",x.id!==id));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page===id));if(id==="today")renderLesson();if(id==="report")renderReport();window.scrollTo({top:0,behavior:"smooth"})}
 document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>go(b.dataset.page));
 $("saveProfile").onclick=()=>{S.profile={name:$("name").value.trim()||"학습자",grade:$("grade").value,score:$("score").value,weeks:+$("weeks").value,minutes:+$("minutes").value,goal:$("goal").value,interest:$("interest").value};persist();go("diagnosis")};
