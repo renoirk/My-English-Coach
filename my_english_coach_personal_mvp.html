@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173b68">
+<title>My English Coach · 개인 맞춤 영어</title>
+<style>
+:root{--navy:#173b68;--blue:#2f6fca;--pale:#edf4ff;--ink:#1d2a3a;--muted:#66758a;--line:#dce5ef;--bg:#f5f8fc;--white:#fff;--green:#18784f;--red:#b33d48}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:16px/1.55 system-ui,-apple-system,"Noto Sans KR",sans-serif;color:var(--ink)}
+header{background:linear-gradient(120deg,#173b68,#3479bd);color:#fff;padding:24px max(16px,calc((100% - 1000px)/2))}
+.brand{font-size:12px;letter-spacing:1.5px;font-weight:800;opacity:.85}.hero{font-size:28px;font-weight:850;margin:6px 0}.sub{font-size:14px;opacity:.92}
+main{max-width:1000px;margin:20px auto;padding:0 14px 40px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:16px}.tab{white-space:nowrap;border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:#fff;color:var(--muted);font-weight:800;cursor:pointer}.tab.active{background:var(--navy);color:white;border-color:var(--navy)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px;box-shadow:0 4px 15px #183b6808}.card h2,.card h3{margin:0 0 10px}.muted{color:var(--muted);font-size:13px}.label{display:block;font-size:13px;font-weight:800;margin:12px 0 5px}input,select{width:100%;padding:11px;border:1px solid #cbd7e5;border-radius:10px;font:inherit;background:white;color:var(--ink)}button{font:inherit;cursor:pointer}.btn{border:0;border-radius:11px;background:var(--blue);color:white;padding:11px 15px;font-weight:800}.btn.secondary{background:#edf3fb;color:var(--navy);border:1px solid var(--line)}.btn:disabled{opacity:.45;cursor:not-allowed}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.row>*{flex:1;min-width:0}.pill{display:inline-block;background:var(--pale);color:var(--navy);font-size:12px;padding:4px 9px;border-radius:999px;font-weight:850}.progress{height:8px;background:#e7edf5;border-radius:99px;overflow:hidden}.progress span{height:100%;display:block;background:var(--blue);width:0;transition:width .2s}.big{font-size:26px;font-weight:850;color:var(--navy)}.stat{background:#f3f7fc;border-radius:12px;padding:12px}.stat strong{display:block;font-size:21px;color:var(--navy)}.hidden{display:none!important}.question{font-weight:800;font-size:17px;margin:13px 0}.option{display:block;width:100%;text-align:left;padding:12px;margin:8px 0;background:white;border:1px solid var(--line);border-radius:11px}.option:hover{border-color:var(--blue);background:#f6faff}.option.selected{border:2px solid var(--blue);background:var(--pale)}.feedback{padding:12px;border-radius:11px;margin:12px 0;background:#eef8f2}.feedback.bad{background:#fff0f0}.task{padding:12px 0;border-bottom:1px solid var(--line)}.task:last-child{border-bottom:0}.task label{display:flex;gap:10px;align-items:flex-start}.task input{width:auto;margin-top:5px}.notice{font-size:12px;color:var(--muted)}.footer{text-align:center;color:var(--muted);font-size:12px;margin-top:22px}.reading{background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:14px}.smallbtn{padding:7px 10px;font-size:13px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.hero{font-size:24px}.card{padding:15px}.tabs{gap:6px}.tab{padding:9px 11px;font-size:14px}}
+</style>
+</head>
+<body>
+<header><div class="brand">PERSONALIZED ENGLISH LEARNING</div><div class="hero">My English Coach</div><div class="sub">나의 수준에 맞게 공부하고, 매주 성장 확인하기</div></header>
+<main>
+<nav class="tabs">
+<button class="tab active" data-page="home">내 학습실</button><button class="tab" data-page="diagnosis">실력 진단</button><button class="tab" data-page="today">오늘의 공부</button><button class="tab" data-page="report">학습 리포트</button>
+</nav>
+<section id="home" class="page">
+<div class="grid">
+<div class="card">
+<h2>학생 설정</h2><p class="muted">개인용 앱이므로 이름 대신 별명을 사용해도 됩니다.</p>
+<label class="label">이름/별명</label><input id="name" placeholder="예: Soccer Player">
+<div class="row"><div><label class="label">학년</label><select id="grade"><option>중학교 3학년</option><option>중학교 2학년</option><option>중학교 1학년</option></select></div><div><label class="label">현재 점수대</label><select id="score"><option value="30-59">30~59점</option><option value="under30">30점 미만</option><option value="60-79">60~79점</option><option value="80plus">80점 이상</option></select></div></div>
+<div class="row"><div><label class="label">학습 기간</label><select id="weeks"><option value="12">12주</option><option value="8">8주</option><option value="4">4주</option></select></div><div><label class="label">하루 공부 시간</label><select id="minutes"><option value="30">30분</option><option value="15">15분</option><option value="45">45분</option></select></div></div>
+<label class="label">가장 중요한 목표</label><select id="goal"><option value="exam">학교 내신 성적 향상</option><option value="basics">영어 기초 다지기</option><option value="reading">독해 실력 향상</option></select>
+<label class="label">좋아하는 주제</label><select id="interest"><option value="soccer">축구·스포츠</option><option value="games">게임</option><option value="friends">친구·학교생활</option></select>
+<button class="btn" id="saveProfile" style="width:100%;margin-top:15px">설정 저장 및 학습 계획 만들기</button>
+</div>
+<div class="card">
+<h2>나의 학습 현황</h2><div class="row"><div class="stat"><span class="muted">진단 점수</span><strong id="scoreStat">미진단</strong></div><div class="stat"><span class="muted">완료한 날</span><strong id="daysStat">0일</strong></div><div class="stat"><span class="muted">학습 진행</span><strong id="progressStat">0%</strong></div></div>
+<h3 style="margin-top:18px">맞춤 추천</h3><p id="recommend">학생 설정을 저장한 뒤 진단평가를 시작하세요.</p><div class="progress"><span id="progressBar"></span></div><p class="muted" id="progressLabel">학습 기록이 여기에 표시됩니다.</p>
+<div class="row"><button class="btn" id="startDiagHome">실력 진단</button><button class="btn secondary" id="goTodayHome">오늘의 공부</button></div>
+</div>
+</div>
+<div class="card"><h3>12주 학습 로드맵</h3><div id="roadmap" class="muted">프로필을 저장하면 선택한 기간에 맞는 로드맵이 표시됩니다.</div></div>
+</section>
+<section id="diagnosis" class="page hidden">
+<div class="card"><h2>영어 실력 진단</h2><p class="muted">어휘·문법·독해 15문항입니다. 이 결과는 학습 시작점을 추천하기 위한 참고용이며 공식 시험 점수는 아닙니다.</p><div class="progress"><span id="diagBar"></span></div><p class="muted" id="diagCount">진단 시작 전</p>
+<div id="diagStart"><button class="btn" id="beginDiag">진단 시작</button></div><div id="diagQ" class="hidden"><span class="pill" id="diagCat"></span><div class="question" id="diagText"></div><div id="diagOpts"></div><div id="diagFeedback" class="feedback hidden"></div><button class="btn" id="diagNext" disabled>다음 문제</button></div><div id="diagResult" class="hidden"></div>
+</div></section>
+<section id="today" class="page hidden"><div class="card"><div class="row"><div><h2>오늘의 공부</h2><p class="muted" id="todayMeta">진단평가 후 맞춤 학습이 열립니다.</p></div><span class="pill" id="timePill">30분</span></div><div id="lessonBody"><p>학생 설정을 저장하고 진단평가를 완료해 주세요.</p><button class="btn secondary" id="toDiag">실력 진단으로 이동</button></div></div></section>
+<section id="report" class="page hidden"><div class="card"><h2>학습 리포트</h2><p class="muted">이 브라우저에 저장된 개인 학습 기록입니다.</p><div id="reportBody">아직 기록이 없습니다.</div><div class="row"><button class="btn secondary" id="exportData">학습 기록 내보내기</button><button class="btn secondary" id="resetData">기록 초기화</button></div><p class="notice">기록은 현재 기기의 브라우저에 저장됩니다. 다른 기기와 자동 동기화되지 않습니다.</p></div></section>
+<div class="footer">My English Coach · 조카 개인용 MVP · 브라우저 로컬 저장 방식</div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const diag=[
+{c:"어휘",q:"'friend'의 뜻은 무엇인가요?",o:["친구","운동","이기다","연습하다"],a:0,e:"friend는 '친구'라는 뜻입니다."},
+{c:"어휘",q:"We play soccer on the ____. 빈칸에 알맞은 말은?",o:["weekend","hungry","because","teacher"],a:0,e:"weekend는 주말입니다."},
+{c:"어휘",q:"'win'과 가장 가까운 뜻은?",o:["잃다","이기다","읽다","만들다"],a:1,e:"win은 경기에서 이기다라는 뜻입니다."},
+{c:"어휘",q:"'practice'의 뜻은?",o:["연습하다","잠자다","빌리다","기다리다"],a:0,e:"practice는 연습하다 또는 연습이라는 뜻입니다."},
+{c:"문법",q:"I ____ happy today.",o:["is","are","am","be"],a:2,e:"I와 함께 be동사 am을 씁니다."},
+{c:"문법",q:"My brother ____ games after school.",o:["play","plays","playing","are play"],a:1,e:"My brother는 3인칭 단수이므로 plays입니다."},
+{c:"문법",q:"She ____ like basketball.",o:["don't","isn't","doesn't","aren't"],a:2,e:"She의 일반동사 부정문은 doesn't + 동사원형입니다."},
+{c:"문법",q:"Look! They ____ soccer now.",o:["play","plays","played","are playing"],a:3,e:"now는 진행 중인 행동을 나타내므로 are playing입니다."},
+{c:"문법",q:"We ____ a movie yesterday.",o:["watch","watches","watched","watching"],a:2,e:"yesterday는 과거이므로 watched입니다."},
+{c:"문법",q:"____ you like games?",o:["Are","Do","Does","Is"],a:1,e:"like는 일반동사이므로 Do you like...?로 질문합니다."},
+{c:"문법",q:"This bag is ____ than that one.",o:["cheap","cheaper","cheapest","more cheap"],a:1,e:"두 대상을 비교하므로 cheaper를 씁니다."},
+{c:"독해",q:"글: 'Minho likes basketball. He practices after school with his friends. On Saturday, they play a game at the park.' 글의 중심 내용은?",o:["민호의 농구 활동","민호의 가족","학교 급식","여행 계획"],a:0,e:"농구 연습과 경기에 관한 글입니다."},
+{c:"독해",q:"위 글에서 민호는 언제 연습하나요?",o:["아침 식사 전","방과 후","자정에","월요일 아침"],a:1,e:"본문에 after school이라고 나옵니다."},
+{c:"독해",q:"글: 'Jina has a new game. She plays it for twenty minutes after homework. Then she reads a book before bed.' 지나는 숙제 후 무엇을 하나요?",o:["축구를 한다","책을 읽는다","새 게임을 한다","잠을 잔다"],a:2,e:"숙제 후 20분 동안 새 게임을 합니다."},
+{c:"독해",q:"위 글에서 지나는 잠들기 전에 무엇을 하나요?",o:["게임하기","책 읽기","숙제하기","친구 만나기"],a:1,e:"본문에 reads a book before bed라고 나옵니다."}
+];
+const plan=[
+["문장 구조와 기본 어순","be동사와 일반동사","현재시제·3인칭 단수","부정문·의문문·1차 진단"],
+["현재진행형","과거시제","조동사 can·must·should","시제·조동사 복습"],
+["전치사와 접속사","비교급·최상급","to부정사 기초","동명사 기초·2차 진단"],
+["문장 연결과 독해","주제·세부 정보 찾기","빈칸·문장 순서","내신형 종합 문제·최종 진단"]];
+const lessonBank={
+"기초 보강":{title:"문장 뼈대 찾기",rule:"영어 기본 어순은 주어 + 동사입니다. 먼저 누가(S) 무엇을 하는지(V) 찾아보세요.",ex:["I play soccer.","My friend likes games.","We study English after school."],qs:[
+{q:"My sister likes music. 동사는?",o:["My sister","likes","music","My"],a:1,e:"likes가 동사입니다."},
+{q:"We ____ happy.",o:["am","is","are","be"],a:2,e:"주어 We에는 are를 씁니다."},
+{q:"He ____ soccer every day.",o:["play","plays","playing","are play"],a:1,e:"He는 3인칭 단수이므로 plays입니다."}]},
+"문법 보강":{title:"현재시제와 3인칭 단수",rule:"반복되는 행동에는 현재시제를 씁니다. he/she/it 또는 한 사람의 이름 뒤에는 일반동사에 보통 -s/-es가 붙습니다.",ex:["I play games.","He plays games.","My friend watches soccer."],qs:[
+{q:"She ____ tennis on Sundays.",o:["play","plays","playing","is play"],a:1,e:"She는 3인칭 단수이므로 plays입니다."},
+{q:"They ____ English after school.",o:["study","studies","studying","is study"],a:0,e:"They에는 동사원형 study를 씁니다."},
+{q:"My brother ____ TV.",o:["watch","watchs","watches","watching"],a:2,e:"watch는 -ch로 끝나므로 watches입니다."}]},
+"독해 보강":{title:"짧은 글에서 답 찾기",rule:"모든 단어를 해석하려고 하지 말고 질문의 핵심 단어를 찾은 다음, 본문에서 근거를 찾아보세요.",ex:["Joon plays soccer after school.","He practices with two friends.","They want to win the game."],qs:[
+{q:"Joon은 언제 축구를 하나요?",o:["아침 식사 전","방과 후","자정에","일요일 밤"],a:1,e:"첫 문장에 after school이라고 나옵니다."},
+{q:"준과 함께 연습하는 친구는 몇 명인가요?",o:["한 명","두 명","세 명","네 명"],a:1,e:"with two friends라고 나옵니다."},
+{q:"친구들은 무엇을 원하나요?",o:["경기에서 이기기","집에 가기","책 읽기","음악 듣기"],a:0,e:"They want to win the game이라고 나옵니다."}]}
+};
+let S={profile:null,diagnosis:null,history:[],completed:[],lessonState:null};
+function persist(){localStorage.setItem("mec_personal_v2",JSON.stringify(S));renderAll()}
+function load(){try{let x=JSON.parse(localStorage.getItem("mec_personal_v2")||"null");if(x)S={...S,...x}}catch(e){}if(S.profile){$("name").value=S.profile.name||"";$("grade").value=S.profile.grade||"중학교 3학년";$("score").value=S.profile.score||"30-59";$("weeks").value=S.profile.weeks||12;$("minutes").value=S.profile.minutes||30;$("goal").value=S.profile.goal||"exam";$("interest").value=S.profile.interest||"soccer"}renderAll()}
+function go(id){document.querySelectorAll(".page").forEach(x=>x.classList.toggle("hidden",x.id!==id));document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x.dataset.page===id));if(id==="today")renderLesson();if(id==="report")renderReport();window.scrollTo({top:0,behavior:"smooth"})}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>go(b.dataset.page));
+$("saveProfile").onclick=()=>{S.profile={name:$("name").value.trim()||"학습자",grade:$("grade").value,score:$("score").value,weeks:+$("weeks").value,minutes:+$("minutes").value,goal:$("goal").value,interest:$("interest").value};persist();go("diagnosis")};
+$("startDiagHome").onclick=()=>go("diagnosis");$("goTodayHome").onclick=()=>go("today");$("toDiag").onclick=()=>go("diagnosis");
+let qi=0,ans=[],pick=null;
+$("beginDiag").onclick=()=>{qi=0;ans=[];pick=null;$("diagStart").classList.add("hidden");$("diagResult").classList.add("hidden");$("diagQ").classList.remove("hidden");showDiag()};
+function showDiag(){let q=diag[qi];$("diagCat").textContent=q.c;$("diagText").textContent=`${qi+1}. ${q.q}`;$("diagOpts").innerHTML="";q.o.forEach((v,i)=>{let b=document.createElement("button");b.className="option";b.textContent="ABCD"[i]+". "+v;b.onclick=()=>{pick=i;document.querySelectorAll("#diagOpts .option").forEach((el,j)=>el.classList.toggle("selected",j===i));$("diagNext").disabled=false};$("diagOpts").appendChild(b)});$("diagFeedback").classList.add("hidden");$("diagNext").disabled=true;$("diagNext").textContent=qi===diag.length-1?"결과 보기":"다음 문제";$("diagCount").textContent=`${qi+1} / ${diag.length} 문항`;$("diagBar").style.width=(qi/diag.length*100)+"%"}
+$("diagNext").onclick=()=>{if(pick===null)return;ans.push(pick);if(qi<diag.length-1){qi++;pick=null;showDiag()}else finishDiag()};
+function finishDiag(){let areas={};diag.forEach((q,i)=>{areas[q.c]??={n:0,c:0};areas[q.c].n++;if(ans[i]===q.a)areas[q.c].c++});let score=ans.filter((a,i)=>a===diag[i].a).length;let weak="문법 보강";if(areas["어휘"].c/areas["어휘"].n<.6)weak="기초 보강";if(areas["독해"].c/areas["독해"].n<.5)weak="독해 보강";if(areas["문법"].c/areas["문법"].n<.6)weak="문법 보강";S.diagnosis={score,total:diag.length,areas,weak,date:new Date().toISOString()};$("diagQ").classList.add("hidden");$("diagResult").classList.remove("hidden");$("diagBar").style.width="100%";let areaText=Object.entries(areas).map(([k,v])=>`${k} ${v.c}/${v.n}`).join(" · ");$("diagResult").innerHTML=`<h3>진단 결과: ${score}/${diag.length}점</h3><span class="pill">추천 시작점: ${weak}</span><p>${score>=12?"기본 개념을 활용할 수 있습니다. 내신형 문제와 독해 난이도를 조금씩 높여 보세요.":score>=8?"기본 개념을 알고 있지만 일부 영역의 반복 연습이 필요합니다.":"기초 개념을 짧게 나누어 다시 연습하는 것을 추천합니다."}</p><p class="muted">영역별 결과: ${areaText}</p><p>진단은 학습 시작점을 정하기 위한 참고 자료입니다. 실제 학교 시험 점수를 직접 예측하지는 않습니다.</p><button class="btn" id="openLesson">맞춤 학습 시작</button>`;$("openLesson").onclick=()=>go("today");persist()}
+function renderRoadmap(){if(!S.profile){$("roadmap").textContent="프로필을 저장하면 선택한 기간에 맞는 로드맵이 표시됩니다.";return}let w=S.profile.weeks;let html="<div class='grid'>";for(let i=0;i<w;i++){let topics=plan[Math.min(3,Math.floor(i/(w/4)))];html+=`<div class="task"><b>${i+1}주차</b><p>${topics.join(" · ")}</p></div>`}html+="</div><p class='notice'>진단 후 추천된 취약 영역을 우선 학습합니다. 주차별 계획은 학습 결과에 따라 조정하는 방식으로 확장할 수 있습니다.</p>";$("roadmap").innerHTML=html}
+function today(){let d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`}
+function renderLesson(){if(!S.profile){$("lessonBody").innerHTML='<p>먼저 학생 설정을 저장하세요.</p><button class="btn secondary" onclick="go(\'home\')">학생 설정</button>';return}if(!S.diagnosis){$("lessonBody").innerHTML='<p>맞춤 학습을 만들려면 진단평가를 먼저 완료하세요.</p><button class="btn" onclick="go(\'diagnosis\')">실력 진단</button>';return}let p=S.profile,d=S.diagnosis;$("todayMeta").textContent=`${p.name} · ${d.weak} 중심 학습`;$("timePill").textContent=p.minutes+"분";if(S.completed.includes(today())){$("lessonBody").innerHTML='<div class="feedback">오늘 학습을 완료했어요. 내일 다시 공부하거나 오답을 복습하세요.</div><button class="btn secondary" onclick="go(\'report\')">학습 리포트 보기</button>';return}let L=lessonBank[d.weak]||lessonBank["문법 보강"];S.lessonState={i:0,correct:0,answered:false};$("lessonBody").innerHTML=`<h3>${L.title}</h3><p>${L.rule}</p><h3>예문</h3><ul>${L.ex.map(x=>`<li>${x}</li>`).join("")}</ul><hr style="border:0;border-top:1px solid var(--line)"><h3>오늘의 미니 테스트</h3><p class="muted">문제를 먼저 풀고 해설을 확인하세요.</p><div id="lQuestion"></div><div id="lFeedback"></div>`;showLesson(L)}
+function showLesson(L){let st=S.lessonState;if(st.i>=L.qs.length){let pct=Math.round(st.correct/L.qs.length*100);$("lQuestion").innerHTML=`<div class="feedback ${pct<67?"bad":""}">결과: ${st.correct}/${L.qs.length}문제 정답 (${pct}%). ${pct>=67?"좋아요! 다음 학습으로 이어가세요.":"해설을 다시 읽고 취약 유형을 복습하세요."}</div><button class="btn" id="finishLesson">오늘 학습 완료</button>`;$("finishLesson").onclick=()=>{S.completed.push(today());S.history.push({date:today(),topic:L.title,correct:st.correct,total:L.qs.length});persist();renderLesson()};return}let q=L.qs[st.i];$("lQuestion").innerHTML=`<div class="question">${st.i+1}. ${q.q}</div><div id="lOptions"></div><button class="btn" id="lNext" disabled>${st.i===L.qs.length-1?"결과 보기":"다음 문제"}</button>`;$("lFeedback").innerHTML="";q.o.forEach((v,i)=>{let b=document.createElement("button");b.className="option";b.textContent="ABCD"[i]+". "+v;b.onclick=()=>{if(st.answered)return;st.answered=true;document.querySelectorAll("#lOptions button").forEach(x=>x.disabled=true);let ok=i===q.a;if(ok)st.correct++;$("lFeedback").innerHTML=`<div class="feedback ${ok?"":"bad"}">${ok?"정답입니다. ":"다시 확인해 보세요. "}${q.e}</div>`;$("lNext").disabled=false};$("lOptions").appendChild(b)});$("lNext").onclick=()=>{st.i++;st.answered=false;showLesson(L)}}
+function renderAll(){let d=S.diagnosis; $("scoreStat").textContent=d?`${d.score}/${d.total}`:"미진단";$("daysStat").textContent=S.completed.length+"일";let pct=S.profile?Math.min(100,Math.round(S.completed.length/(S.profile.weeks*5)*100)):0;$("progressStat").textContent=pct+"%";$("progressBar").style.width=pct+"%";$("progressLabel").textContent=S.profile?`목표 ${S.profile.weeks}주 · 학습 완료 ${S.completed.length}일`:"학생 설정 후 진행률이 표시됩니다.";if(d)$("recommend").textContent=`진단 결과 ${d.score}/${d.total}점. ${d.weak} 영역을 먼저 연습합니다.`;else if(S.profile)$("recommend").textContent="설정 저장 완료. 실력 진단을 진행하세요.";renderRoadmap();renderReport()}
+function renderReport(){let d=S.diagnosis;if(!d){$("reportBody").innerHTML="<p>진단평가를 완료하면 영역별 결과가 표시됩니다.</p>";return}let rows=Object.entries(d.areas).map(([k,v])=>`<div class="task"><b>${k}</b><div class="progress"><span style="width:${Math.round(v.c/v.n*100)}%"></span></div><span class="muted">${v.c}/${v.n} 정답 (${Math.round(v.c/v.n*100)}%)</span></div>`).join("");$("reportBody").innerHTML=`<div class="row"><div class="stat"><span class="muted">진단 점수</span><strong>${d.score}/${d.total}</strong></div><div class="stat"><span class="muted">완료한 학습</span><strong>${S.completed.length}일</strong></div><div class="stat"><span class="muted">학습 기간</span><strong>${S.profile?.weeks||12}주</strong></div></div><h3 style="margin-top:18px">영역별 진단</h3>${rows}<h3>추천 학습 영역</h3><p>${d.weak}</p><h3>완료 기록</h3><p>${S.history.length?S.history.map(h=>`${h.date} · ${h.topic} · ${h.correct}/${h.total}`).join("<br>"):"아직 완료한 학습이 없습니다."}</p>`}
+$("exportData").onclick=()=>{let blob=new Blob([JSON.stringify(S,null,2)],{type:"application/json"});let a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="my-english-coach-record.json";a.click();URL.revokeObjectURL(a.href)};
+$("resetData").onclick=()=>{if(confirm("이 브라우저의 프로필과 학습 기록을 모두 삭제할까요?")){localStorage.removeItem("mec_personal_v2");S={profile:null,diagnosis:null,history:[],completed:[],lessonState:null};load()}};
+load();
+</script>
+</body></html>
