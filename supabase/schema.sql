@@ -1,5 +1,6 @@
 -- My English Coach cloud sync schema
-create extension if not exists pgcrypto;
+create schema if not exists extensions;
+create extension if not exists pgcrypto with schema extensions;
 
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
@@ -84,7 +85,7 @@ begin
   if not exists(select 1 from public.profiles where id = auth.uid() and role = 'student') then
     raise exception '학생 계정만 연결 코드를 발급할 수 있습니다.';
   end if;
-  new_code := upper(substr(encode(gen_random_bytes(6),'hex'),1,10));
+  new_code := upper(substr(encode(extensions.gen_random_bytes(6),'hex'),1,10));
   update public.profiles set link_code = new_code where id = auth.uid();
   return new_code;
 end;
