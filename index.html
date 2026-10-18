@@ -125,6 +125,7 @@ let diag=[
 {c:"독해",q:"글: 'Jina has a new game. She plays it for twenty minutes after homework. Then she reads a book before bed.' 지나는 숙제 후 무엇을 하나요?",o:["축구를 한다","책을 읽는다","새 게임을 한다","잠을 잔다"],a:2,e:"숙제 후 20분 동안 새 게임을 합니다."},
 {c:"독해",q:"위 글에서 지나는 잠들기 전에 무엇을 하나요?",o:["게임하기","책 읽기","숙제하기","친구 만나기"],a:1,e:"본문에 reads a book before bed라고 나옵니다."}
 ];
+const diagnosticBase=diag.slice();
 const diagnosticVariants={
 "하":[
 {c:"문법",q:"My brother ____ soccer every day.",o:["play","plays","playing","is play"],a:1,e:"My brother는 3인칭 단수이므로 plays입니다."},
@@ -145,7 +146,7 @@ const diagnosticVariants={
 function setDiagnosticDifficulty(){
  const band=S.profile?.score||"30-59";
  const level=band==="80plus"?"상":band==="60-79"?"중":"하";
- const base=diag.slice();
+ const base=diagnosticBase.slice();
  const replacements=diagnosticVariants[level];
  replacements.forEach((q,i)=>{const targetIndex=[5,8,12][i];if(targetIndex<base.length)base[targetIndex]=q});
  diag=base;
